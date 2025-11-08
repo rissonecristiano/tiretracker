@@ -1,13 +1,27 @@
 /* Base Styles */
 :root {
-    --primary: #e63946;
-    --secondary: #1d3557;
-    --background: #f1faee;
-    --light: #a8dadc;
-    --dark: #457b9d;
+    /* Captivating palette */
+    --primary: #00c2ff; /* electric cyan */
+    --primary-2: #7c4dff; /* vivid purple */
+    --secondary: #0b1b2b; /* deep navy */
+    --background-1: #0a0f1f;
+    --background-2: #1b2a4a;
     --white: #ffffff;
     --gray: #e0e0e0;
-    --text: #333333;
+    --text: #e6eef8;
+    --muted: #a7b3c6;
+
+    /* Glassmorphism tokens */
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.25);
+    --glass-shadow: rgba(0, 0, 0, 0.25);
+    --glass-hover-bg: rgba(255, 255, 255, 0.2);
+
+    /* Gradients */
+    --bg-gradient: radial-gradient(1000px 600px at 20% 10%, rgba(124, 77, 255, 0.25), transparent 60%),
+                   radial-gradient(800px 500px at 80% 20%, rgba(0, 194, 255, 0.25), transparent 60%),
+                   linear-gradient(160deg, var(--background-1), var(--background-2));
+    --accent-gradient: linear-gradient(135deg, var(--primary), var(--primary-2));
 }
 
 * {
@@ -16,10 +30,14 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
+html, body {
+    max-width: 100%;
+    overflow-x: hidden; /* prevent accidental horizontal scroll on mobile */
+}
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--background);
+    background: var(--bg-gradient);
     color: var(--text);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -34,40 +52,116 @@ body {
 
 /* Header */
 header {
-    background-color: var(--primary);
-    color: var(--white);
-    padding: 1rem;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: static;
+    padding: 1rem 1.25rem; /* fuller spacing like before */
+    text-align: center; /* restore centered title layout */
+    color: var(--ios-label);
+    background: var(--ios-card); /* professional card background */
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    border-bottom: 1px solid var(--ios-separator);
+    box-shadow: var(--ios-shadow);
 }
 
 header h1 {
-    font-size: 1.8rem;
-    margin-bottom: 0.2rem;
+    font-size: 1.6rem; /* closer to previous size */
+    font-weight: 800;
+    letter-spacing: -0.3px;
 }
 
 header p {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     opacity: 0.9;
+    color: var(--ios-secondary-label);
+}
+
+/* Auth Banner */
+.banner {
+    position: fixed; /* keep visible anywhere on page */
+    top: calc(env(safe-area-inset-top) + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 94%;
+    max-width: 720px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    background: var(--ios-tint); /* strong, clear alert */
+    color: #fff;
+    border-radius: 14px;
+    box-shadow: var(--ios-shadow-strong);
+    z-index: 1000;
+    animation: bannerSlideDown 220ms ease-out;
+}
+
+@keyframes bannerSlideDown {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.banner-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.hidden { display: none; }
+
+/* Login button sizing and highlight */
+#login-btn {
+    padding: 0.5rem 0.9rem;
+    width: auto;
+    min-width: 90px;
+    height: auto;
+    min-height: 2.5rem;
+    border-radius: 16px;
+}
+
+#login-btn #login-btn-label { font-size: 0.95rem; font-weight: 700; }
+
+@keyframes pulseHighlight {
+    0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,194,255,0), 0 0 0 0 rgba(124,77,255,0); }
+    35%  { transform: scale(1.10); box-shadow: 0 0 0 14px rgba(0,194,255,0.65), 0 0 24px 8px rgba(124,77,255,0.55); }
+    65%  { transform: scale(1.06); box-shadow: 0 0 0 18px rgba(0,194,255,0.45), 0 0 18px 6px rgba(124,77,255,0.40); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,194,255,0), 0 0 0 0 rgba(124,77,255,0); }
+}
+
+.highlight-login {
+    animation: pulseHighlight 1.2s ease-in-out;
+    will-change: transform, box-shadow;
+}
+
+#login-btn.highlight-login {
+    color: var(--white);
+    outline: 2px solid rgba(255,255,255,0.85);
+    outline-offset: 2px;
 }
 
 /* Navigation Tabs */
 .tab-navigation {
     display: flex;
-    background-color: var(--white);
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+    background: var(--glass-bg);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid var(--glass-border);
+    box-shadow: 0 -4px 20px var(--glass-shadow);
     position: fixed;
     bottom: 0;
     width: 100%;
     z-index: 10;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .tab-btn {
     flex: 1;
     padding: 0.8rem 0;
-    background: none;
+    background: transparent;
     border: none;
-    color: var(--secondary);
+    color: var(--muted);
     font-size: 0.7rem;
     display: flex;
     flex-direction: column;
@@ -88,8 +182,7 @@ header p {
 main {
     flex: 1;
     padding: 1rem;
-    padding-bottom: 4rem; /* Space for the tab bar */
-    overflow-y: auto;
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom)); /* Space for tab bar + iOS home indicator */
 }
 
 .tab-content {
@@ -110,21 +203,21 @@ main {
 
 .section-header h2 {
     font-size: 1.3rem;
-    color: var(--secondary);
+    color: var(--text);
 }
 
 .action-btn {
-    background-color: var(--primary);
+    background: var(--accent-gradient);
     color: var(--white);
     width: 2.5rem;
     height: 2.5rem;
-    border-radius: 50%;
-    border: none;
+    border-radius: 14px;
+    border: 1px solid var(--glass-border);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
     cursor: pointer;
 }
 
@@ -160,20 +253,24 @@ main {
 }
 
 .card {
-    background-color: var(--white);
-    border-radius: 8px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 30px var(--glass-shadow);
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
 }
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 16px 40px var(--glass-shadow);
+    background: var(--glass-hover-bg);
 }
 
 .driver-card {
-    border-left: 4px solid var(--secondary);
+    border-left: 4px solid var(--primary);
 }
 
 .tire-card {
@@ -207,12 +304,12 @@ main {
 }
 
 .card-title {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 1.1rem;
 }
 
 .card-subtitle {
-    color: #666;
+    color: var(--muted);
     font-size: 0.9rem;
 }
 
@@ -224,16 +321,16 @@ main {
 }
 
 .card-detail-label {
-    color: #666;
+    color: var(--muted);
 }
 
 .card-notes {
     margin-top: 0.8rem;
     padding-top: 0.8rem;
-    border-top: 1px solid var(--gray);
+    border-top: 1px solid var(--glass-border);
     font-size: 0.9rem;
     font-style: italic;
-    color: #666;
+    color: var(--muted);
 }
 
 .card-actions {
@@ -242,29 +339,49 @@ main {
     gap: 10px;
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--glass-border);
 }
 
 .btn-small {
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 6px 12px;
     font-size: 0.8rem;
+    color: var(--text);
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    box-shadow: 0 4px 10px var(--glass-shadow);
 }
 
 .btn-small:hover {
-    background-color: #e0e0e0;
+    background: var(--glass-hover-bg);
 }
 
 .events-list {
     margin: 0;
     padding-left: 20px;
     font-size: 0.85rem;
+}
+
+.sessions-list {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 0.85rem;
+}
+.sessions-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.btn-icon.btn-delete-session {
+    background: transparent;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
 }
 
 /* Filter Bar */
@@ -276,11 +393,14 @@ main {
 
 .filter-bar select {
     flex: 1;
-    padding: 0.5rem;
-    border: 1px solid var(--light);
-    border-radius: 4px;
-    background-color: var(--white);
-    font-size: 0.9rem;
+    padding: 0.6rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    background: var(--glass-bg);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    font-size: 0.95rem;
+    color: var(--text);
 }
 
 /* Stats */
@@ -291,24 +411,55 @@ main {
 }
 
 .stat-card {
-    background-color: var(--white);
-    border-radius: 8px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 30px var(--glass-shadow);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
 }
 
 .stat-card h3 {
-    color: var(--secondary);
+    color: var(--text);
     margin-bottom: 0.5rem;
-    font-size: 1rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-align: center;
 }
 
 #total-tires-count {
     font-size: 2rem;
-    font-weight: bold;
+    font-weight: 800;
     color: var(--primary);
     text-align: center;
     margin: 0.5rem 0;
+}
+
+#kpi-available-sets {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary);
+    text-align: center;
+    margin: 0.5rem 0;
+}
+
+#kpi-mounted-sets {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary);
+    text-align: center;
+    margin: 0.5rem 0;
+}
+
+.stat-caption {
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--text);
+    opacity: 1;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    margin-top: 0.15rem;
 }
 
 .stat-details {
@@ -328,14 +479,15 @@ main {
 
 .stat-bar-track {
     height: 0.5rem;
-    background-color: var(--gray);
-    border-radius: 4px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
     overflow: hidden;
 }
 
 .stat-bar-fill {
     height: 100%;
-    background-color: var(--primary);
+    background: var(--accent-gradient);
 }
 
 /* Modals */
@@ -352,19 +504,137 @@ main {
 }
 
 .modal-content {
-    background-color: var(--white);
+    background: var(--glass-bg);
     margin: 10% auto;
     width: 90%;
     max-width: 500px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 20px 40px var(--glass-shadow);
     overflow: hidden;
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+}
+
+/* Center the Update Mileage modal via flex */
+#update-mileage-modal {
+    display: none; /* will be set to grid via JS */
+    position: fixed;
+    inset: 0; /* shorthand for top/right/bottom/left: 0 */
+    overflow: hidden; /* avoid scroll affecting vertical centering */
+    display: grid;
+    place-items: center; /* perfect centering */
+}
+
+#update-mileage-modal .modal-content { margin: 0; }
+
+/* Hard guarantee: absolute centering for Update Mileage modal */
+#update-mileage-modal .modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Center the Add Driver modal */
+#driver-modal {
+    display: none; /* toggled to grid in JS */
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+#driver-modal .modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92%;
+    max-width: 480px;
+    border-radius: 20px;
+    margin: 0;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+#driver-modal .modal-content::before {
+    display: none; /* remove bottom-sheet handle on centered dialog */
+}
+
+/* Update Mileage modal layout */
+.form-inline {
+    display: flex;
+    gap: 12px;
+}
+
+.inline-field {
+    flex: 1;
+}
+
+.computed-preview {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px dashed var(--glass-border);
+    border-radius: 12px;
+    background: var(--glass-hover-bg);
+    display: flex;
+    gap: 12px;
+}
+
+.computed-preview .stat {
+    flex: 1;
+}
+
+/* Center the Add Tire modal */
+#tire-modal {
+    display: none; /* toggled to grid in JS */
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+#tire-modal .modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92%;
+    max-width: 560px;
+    border-radius: 20px;
+    margin: 0;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+#tire-modal .modal-content::before {
+    display: none; /* remove bottom-sheet handle on centered dialog */
+}
+
+/* Ensure Update Mileage modal content fits viewport */
+#update-mileage-modal .modal-content {
+    width: 92%;
+    max-width: 560px;
+    border-radius: 20px;
+    margin: 0;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
 }
 
 .modal-header {
     padding: 1rem;
-    background-color: var(--secondary);
-    color: var(--white);
+    background: var(--glass-bg);
+    color: var(--text);
+    border-bottom: 1px solid var(--glass-border);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -398,22 +668,27 @@ form {
 .form-group textarea {
     width: 100%;
     padding: 0.8rem;
-    border: 1px solid var(--gray);
-    border-radius: 4px;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
     font-size: 1rem;
+    background: var(--glass-bg);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    color: var(--text);
 }
 
 .btn-primary {
-    background-color: var(--primary);
+    background: var(--accent-gradient);
     color: var(--white);
-    border: none;
-    padding: 0.8rem;
-    border-radius: 4px;
+    border: 1px solid var(--glass-border);
+    padding: 0.9rem;
+    border-radius: 12px;
     width: 100%;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
     margin-top: 1rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
 }
 
 /* Empty State */
@@ -432,19 +707,21 @@ form {
 /* Back button */
 .back-btn {
     background-color: transparent;
-    border: none;
+    border: 1px solid var(--glass-border);
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
     font-size: 0.9rem;
-    color: #333;
+    color: var(--text);
     cursor: pointer;
-    padding: 5px;
-    border-radius: 4px;
+    padding: 6px 10px;
+    border-radius: 12px;
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
 }
 
 .back-btn:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: var(--glass-hover-bg);
 }
 
 /* Driver detail view */
@@ -460,12 +737,42 @@ form {
     margin-bottom: 15px;
 }
 
+/* Floating action button used in driver detail */
+.floating-action-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: var(--accent-gradient);
+    color: var(--white);
+    border: 1px solid var(--glass-border);
+    font-size: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.floating-action-btn:hover {
+    transform: translateY(-1px) scale(1.03);
+}
+
+/* Trashed tires appearance */
+.tire-card.trashed {
+    opacity: 0.6;
+    filter: grayscale(40%);
+}
+
 /* Responsive adjustments */
 @media (min-width: 768px) {
     .app-container {
         max-width: 768px;
         margin: 0 auto;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
     }
     
     .tab-navigation {
@@ -477,3 +784,306 @@ form {
         padding-bottom: 1rem;
     }
 }
+
+/* =============================
+   iOS 18 Theme Overrides
+   ============================= */
+
+:root {
+    /* iOS Night Mode tokens */
+    --ios-tint: #0A84FF; /* system blue */
+    --ios-bg: #0C0C0D; /* system background dark */
+    --ios-card: #1C1C1E; /* card/sheet dark */
+    --ios-separator: #2C2C2E; /* separator dark */
+    --ios-label: #F2F2F7; /* label primary light */
+    --ios-secondary-label: #98989F; /* secondary light */
+    --ios-shadow: 0 8px 24px rgba(0,0,0,0.55);
+    --ios-shadow-strong: 0 16px 48px rgba(0,0,0,0.7);
+}
+
+body {
+    background: var(--ios-bg);
+    color: var(--ios-label);
+    font-size: 16px;
+}
+
+header {
+    color: var(--ios-label);
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+header p {
+    color: var(--ios-secondary-label);
+}
+
+.tab-navigation {
+    backdrop-filter: saturate(180%) blur(24px);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    box-shadow: 0 -8px 20px rgba(0,0,0,0.06);
+}
+
+.tab-btn {
+    color: var(--ios-secondary-label);
+    position: relative;
+}
+
+.tab-btn.active {
+    color: var(--ios-tint);
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    width: 6px;
+    height: 6px;
+    background: var(--ios-tint);
+    border-radius: 50%;
+}
+
+.action-btn {
+    background: var(--ios-tint);
+    color: var(--ios-card);
+    border: none;
+    box-shadow: var(--ios-shadow);
+}
+
+.card {
+    background: var(--ios-card);
+    box-shadow: var(--ios-shadow);
+    border-color: var(--ios-separator);
+}
+
+.card:hover {
+    box-shadow: var(--ios-shadow-strong);
+}
+
+.card-subtitle { color: var(--ios-secondary-label); }
+.card-detail-label { color: var(--ios-secondary-label); }
+
+.btn-small {
+    background: var(--ios-card);
+    color: var(--ios-label);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--ios-shadow);
+}
+.btn-small:hover { background: #f7f7fb; }
+
+.filter-bar select {
+    background: var(--ios-card);
+    color: var(--ios-label);
+    border: 1px solid var(--ios-separator);
+}
+
+.stat-card { background: var(--ios-card); box-shadow: var(--ios-shadow); }
+#total-tires-count { color: var(--ios-tint); }
+
+.modal-content {
+    background: var(--ios-card);
+    margin: 0 auto;
+    width: 100%;
+    max-width: 560px;
+    border-radius: 24px 24px 0 0;
+    border: 1px solid var(--ios-separator);
+    box-shadow: var(--ios-shadow-strong);
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+}
+.modal-content::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 5px;
+    background: #e1e1e5;
+    border-radius: 3px;
+    margin: 10px auto 0;
+}
+
+/* Centered modal for authentication dialogs */
+#login-modal .modal-content,
+#register-modal .modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92%;
+    max-width: 480px;
+    border-radius: 20px; /* uniform corners for center dialog */
+    margin: 0; /* ignore sheet margin */
+    max-height: 85vh; /* fit on small screens */
+    overflow-y: auto; /* allow scrolling when content exceeds viewport */
+}
+#login-modal .modal-content::before,
+#register-modal .modal-content::before {
+    display: none; /* remove bottom-sheet handle on centered dialogs */
+}
+
+/* Login helper text positioning */
+#login-modal .modal-content .muted {
+    text-align: center; /* center horizontally under the button */
+    margin: 0.75rem 0 1rem; /* spacing below login button */
+    color: var(--ios-secondary-label);
+}
+#login-modal .modal-content .muted a {
+    color: var(--ios-tint);
+    font-weight: 600;
+    text-decoration: none;
+}
+#login-modal .modal-content .muted a:hover {
+    text-decoration: underline;
+}
+
+/* Driver avatar styles */
+.driver-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.driver-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--ios-separator);
+}
+
+.driver-avatar.placeholder {
+    background: var(--ios-secondary-system-fill);
+    color: var(--ios-secondary-label);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+/* Driver profile header in driver detail view */
+.driver-profile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--ios-card);
+    border: 1px solid var(--ios-separator);
+    border-radius: 16px;
+    box-shadow: var(--ios-shadow);
+    margin: 0 16px 12px;
+}
+
+.driver-profile-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.driver-profile-actions .btn-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-group label { color: var(--ios-label); font-weight: 600; }
+.form-group input, .form-group select, .form-group textarea {
+    background: var(--ios-card);
+    color: var(--ios-label);
+    border: 1px solid var(--ios-separator);
+}
+
+.btn-primary {
+    background: var(--ios-tint);
+    color: var(--ios-card);
+    border: none;
+    box-shadow: var(--ios-shadow);
+}
+
+.banner { background: var(--ios-card); box-shadow: var(--ios-shadow); border-bottom: 1px solid var(--ios-separator); }
+
+#login-btn {
+    padding: 0.6rem 1rem;
+    min-width: 96px;
+    min-height: 2.8rem;
+    border-radius: 20px;
+}
+
+/* iOS-style switches using :has */
+.status-checkbox {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 56px; /* space for switch */
+    min-height: 28px;
+}
+.status-checkbox input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.status-checkbox::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 26px;
+    background: #D1D1D6; /* light grey off track for visibility */
+    border-radius: 26px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+    border: 1px solid #C7C7CC; /* subtle border like iOS */
+    transition: background 0.2s ease;
+    z-index: 0; /* ensure track sits below knob */
+}
+.status-checkbox::before {
+    content: '';
+    position: absolute;
+    left: 1px; /* exact iOS-like 1px margin on the left */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, background 0.2s ease;
+    z-index: 1; /* knob above track so it's visible */
+}
+.status-checkbox:has(input:checked)::after { background: var(--ios-tint); }
+.status-checkbox:has(input:checked)::before { transform: translate(18px, -50%); /* 1px margins both sides (44-24-1-1=18) */ }
+.status-checkbox:has(input:disabled) { opacity: 0.6; }
+
+/* Toggle button (iOS-style pill) */
+.card-status {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.toggle-btn {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid var(--glass-border);
+    background: var(--ios-card);
+    color: var(--ios-label);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    font-weight: 600;
+    box-shadow: var(--ios-shadow);
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+.toggle-btn:hover { transform: translateY(-1px); }
+.toggle-btn.on {
+    background: var(--ios-tint);
+    color: #fff;
+    border-color: transparent;
+}
+.toggle-btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+.toggle-btn .toggle-label { opacity: 0.9; }
+.toggle-btn .toggle-state { margin-left: 6px; font-weight: 700; color: var(--ios-secondary-label); }
+.toggle-btn.on .toggle-state { color: #fff; }
